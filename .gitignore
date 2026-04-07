@@ -1,0 +1,13 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.log
+.DS_Store
+data/log_scheduler.txt
+
+# keep seen.json tracked (state for dedup)
+!data/seen.json
