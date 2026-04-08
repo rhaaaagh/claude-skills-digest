@@ -211,6 +211,7 @@ def collect(max_items: int = 20) -> List[SkillItem]:
             category=detail.get("category", ""),
             author=detail.get("author", ""),
             item_type=item["item_type"],
+            source="cultofclaude",
         ))
 
     results.sort(key=lambda x: -x.rating)

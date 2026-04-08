@@ -1,6 +1,6 @@
 # Claude Code Skills & Agents Digest Bot
 
-Автоматический Telegram-бот, который ежедневно собирает **топовые skills и agents** для Claude Code с сайта [cultofclaude.com](https://cultofclaude.com), генерирует краткую сводку на русском через **Groq (Llama 3.3)** и отправляет в Telegram.
+Автоматический Telegram-бот, который ежедневно собирает материалы из **[skills.sh](https://skills.sh/)** (лидерборд по установкам) и **[cultofclaude.com](https://cultofclaude.com)** (топ skills/agents), генерирует сводку на русском через **Groq (Llama 3.3)** и отправляет в Telegram. Для записей с **skills.sh** в сообщении указывается прямая ссылка на карточку на сайте, без ссылки на GitHub.
 
 Работает полностью автоматизированно через **GitHub Actions** — бесплатно, без локального компьютера.
 
@@ -8,8 +8,8 @@
 
 ```
 GitHub Actions (cron ежедневно 09:00 UTC)
-  → Парсинг cultofclaude.com (Top Skills + Top Agents + Trending)
-  → Получение GitHub-ссылок с detail-страниц
+  → Парсинг skills.sh (лидерборд) + cultofclaude.com
+  → Для cultofclaude — GitHub с detail-страниц; для skills.sh — только URL на skills.sh
   → Фильтрация уже отправленных (seen.json)
   → Генерация сводки через Groq LLM
   → Отправка в Telegram
@@ -49,6 +49,7 @@ python run_pipeline.py
 
 ```
 collector/
+  skills_sh.py      — парсинг skills.sh (лидерборд, ссылка на карточку сайта)
   cultofclaude.py   — парсинг cultofclaude.com
   base.py           — модель данных SkillItem
   runner.py         — оркестратор коллекторов

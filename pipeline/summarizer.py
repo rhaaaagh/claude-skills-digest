@@ -41,11 +41,14 @@ SYSTEM_PROMPT = (
 def _format_items_for_prompt(items: List[SkillItem]) -> str:
     lines = []
     for i, it in enumerate(items, 1):
-        lines.append(
-            f"{i}. [{it.item_type.upper()}] {it.title}\n"
-            f"   Описание (en): {it.description or 'нет'}\n"
-            f"   GitHub: {it.github_url or 'нет'}"
+        block = (
+            f"{i}. [{it.item_type.upper()}] {it.title} (источник: {it.source})\n"
+            f"   Описание: {it.description or 'нет'}\n"
+            f"   Страница: {it.page_url}"
         )
+        if it.github_url:
+            block += f"\n   GitHub: {it.github_url}"
+        lines.append(block)
     return "\n\n".join(lines)
 
 
@@ -130,7 +133,7 @@ def _format_message(items: List[SkillItem], summaries: dict) -> str:
     parts = [header]
     for i, it in enumerate(items, 1):
         tag = it.item_type.upper()
-        gh = it.github_url or it.page_url
+        link = it.page_url if it.source == "skills.sh" else (it.github_url or it.page_url)
         s = summaries.get(i, {})
 
         block = f"\n{i}. [{tag}] {it.title}\n"
@@ -140,7 +143,7 @@ def _format_message(items: List[SkillItem], summaries: dict) -> str:
             block += f"\n{s['use']}\n"
         if s.get("ideas"):
             block += f"\n💡 Как применить:\n{s['ideas']}\n"
-        block += f"\n🔗 {gh}"
+        block += f"\n🔗 {link}"
 
         parts.append(block)
 
@@ -159,9 +162,9 @@ def build_fallback_summary(items: List[SkillItem]) -> str:
     for i, it in enumerate(items, 1):
         tag = it.item_type.upper()
         desc = (it.description or "")[:200]
-        gh = it.github_url or it.page_url
+        link = it.page_url if it.source == "skills.sh" else (it.github_url or it.page_url)
 
-        block = f"\n{i}. [{tag}] {it.title}\n{desc}\n\n🔗 {gh}"
+        block = f"\n{i}. [{tag}] {it.title}\n{desc}\n\n🔗 {link}"
         parts.append(block)
 
     return "\n".join(parts).strip()
